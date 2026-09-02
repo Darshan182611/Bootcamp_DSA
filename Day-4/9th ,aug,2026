@@ -1,0 +1,140 @@
+question 1: constructor (gfg)
+sokution : class User {
+    String name;
+
+    // Default constructor
+    public User() {
+        this.name = "Default";
+    }
+}
+
+question 2: Abstraction in Java 
+solution : abstract class Shape {
+    String color;
+
+    // Constructor
+    public Shape(String c) {
+        this.color = c;
+    }
+
+    // Concrete method
+    public String getColor() {
+        return color;
+    }
+
+    // Abstract method
+    public abstract double getArea();
+}
+
+class Square extends Shape {
+    double side;
+
+    // Constructor
+    public Square(String c, double side) {
+        super(c);
+        this.side = side;
+    }
+
+    // Implementing the abstract method
+    @Override
+    public double getArea() {
+        return side * side;
+    }
+}
+
+question 3: Constructor overloading 
+solution: class User {
+    String name;
+
+    // First constructor (default)
+    public User() {
+        this.name = "Default";
+    }
+
+    // Second constructor (parameterized)
+    public User(String name) {
+        this.name = name;
+    }
+}
+
+question 4 : Max. area of rec.
+solution : class Solution {
+    public int calArea(int[][] arr) {
+   int maxArea = 0;
+
+   for (int i = 0; i < arr.length; i++) {
+       // Area of a rectangle = length * breadth
+       int currentArea = arr[i][0] * arr[i][1];
+
+       // Update maxArea if the current rectangle is larger
+       if (currentArea > maxArea) {
+           maxArea = currentArea;
+       }
+   }
+
+   return maxArea;
+        
+    }
+}
+
+question 5: java inheritance 
+soltion: class cls2 extends cls1 {
+    void mul(int p, int q) { System.out.println(p * q); }
+
+    void task(int p, int q) {
+        System.out.println((p * p) + (q * q));
+    }
+}
+
+question 6 : Inheritance in Java
+solution: class Employee {
+    int id;
+    int salary;
+
+    // Constructor
+    public Employee(int id, int salary) {
+        this.id = id;
+        this.salary = salary;
+    }
+}
+
+class SalesEmployee extends Employee {
+    int sales;
+
+    // Constructor
+    public SalesEmployee(int id, int salary, int sales) {
+        // Call to the parent class (Employee) constructor
+        super(id, salary);
+        this.sales = sales;
+    }
+}
+
+question 7:Design Parking System(lc-1603)
+solution: class ParkingSystem {
+    // Array to store the available spaces.
+    // We use size 4 so we can directly map carType (1, 2, 3) to the indices.
+    // Index 0 is ignored.
+    private int[] spaces;
+
+    public ParkingSystem(int big, int medium, int small) {
+        spaces = new int[]{0, big, medium, small};
+    }
+    
+    public boolean addCar(int carType) {
+        // Check if there is an available slot for the given carType
+        if (spaces[carType] > 0) {
+            spaces[carType]--; // Park the car (decrease available space)
+            return true;
+        }
+        
+        // No spaces available for this car type
+        return false;
+    }
+}
+
+/**
+ * Your ParkingSystem object will be instantiated and called as such:
+ * ParkingSystem obj = new ParkingSystem(big, medium, small);
+ * boolean param_1 = obj.addCar(carType);
+ */
+
