@@ -1,0 +1,182 @@
+question 1:Merge Strings Alternately(lc-1768)
+  solution: class Solution {
+    public String mergeAlternately(String word1, String word2) {
+        StringBuilder result = new StringBuilder();
+        
+        // Find the maximum length to ensure all characters are processed
+        int maxLength = Math.max(word1.length(), word2.length());
+        
+        // Loop through every index up to the maximum length
+        for (int i = 0; i < maxLength; i++) {
+            // If word1 still has characters at this index, append it
+            if (i < word1.length()) {
+                result.append(word1.charAt(i));
+            }
+            // If word2 still has characters at this index, append it
+            if (i < word2.length()) {
+                result.append(word2.charAt(i));
+            }
+        }
+        
+        return result.toString();
+    }
+}
+
+question 2: Greatest Common Divisor of Strings(lc-1071)
+solution: class Solution {
+    public String gcdOfStrings(String str1, String str2) {
+         if (!(str1 + str2).equals(str2 + str1)) {
+            return "";
+        }
+
+        // Find GCD of lengths
+        int gcd = findGCD(str1.length(), str2.length());
+
+        // Return the common string
+        return str1.substring(0, gcd);
+    }
+
+    public int findGCD(int a, int b) {
+
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+
+        return a;
+        
+    }
+}
+
+
+question 3: Kids With the Greatest Number of Candies(1431)
+solution: class Solution {
+    public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+        List<Boolean> ans = new ArrayList<>();
+    final int maxCandy = Arrays.stream(candies).max().getAsInt();
+
+    for (final int candy : candies)
+      ans.add(candy + extraCandies >= maxCandy);
+
+    return ans;
+    }
+}
+
+HomeWork Question:
+question 4:Can Place Flowers(lc-605)
+solution: class Solution {
+    public boolean canPlaceFlowers(int[] flowerbed, int n) {
+        // Base case: If no flowers need to be planted, it's always possible.
+        if (n <= 0) {
+            return true;
+        }
+        
+        int length = flowerbed.length;
+        
+        for (int i = 0; i < length; i++) {
+            // Check if the current plot is empty
+            if (flowerbed[i] == 0) {
+                // Check if the left neighbor is empty or if we are at the first plot
+                boolean isLeftEmpty = (i == 0) || (flowerbed[i - 1] == 0);
+                
+                // Check if the right neighbor is empty or if we are at the last plot
+                boolean isRightEmpty = (i == length - 1) || (flowerbed[i + 1] == 0);
+                
+                // If both conditions are satisfied, we can plant a flower
+                if (isLeftEmpty && isRightEmpty) {
+                    flowerbed[i] = 1; // Modify the array to place the flower
+                    n--;              // Reduce the remaining flowers count
+                    
+                    // Optimization: Early exit if all flowers are successfully placed
+                    if (n == 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        // Return true if all flowers were placed, false otherwise
+        return n <= 0;
+    }
+}
+
+question 5: Reverse Vowels of a String(lc-345)
+solution: class Solution {
+            public static String reverseVowels(String s) {
+        // Step 1: Track vowels in a temporary storage collection
+        List<Character> vowelsList = new ArrayList<>();
+        
+        // Step 2: First pass to collect all vowels from the string
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (isVowel(ch)) {
+                vowelsList.add(ch);
+            }
+        }
+        
+        // Step 3: Rebuild the string using a helper pointer from the back of the list
+        StringBuilder result = new StringBuilder();
+        int vowelIndex = vowelsList.size() - 1; // Start from the last collected vowel
+        
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (isVowel(ch)) {
+                // Replace with the vowel from the end of the collection
+                result.append(vowelsList.get(vowelIndex));
+                vowelIndex--;
+            } else {
+                // Keep non-vowel characters exactly as they are
+                result.append(ch);
+            }
+        }
+        
+        return result.toString();
+    }
+
+    // Helper method to check for both lowercase and uppercase vowels
+    private static boolean isVowel(char ch) {
+        return ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u' ||
+               ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U';
+    }
+
+    public static void main(String[] args) {
+        String input = "hello";
+        System.out.println("Original: " + input);
+        System.out.println("Reversed Vowels: " + reverseVowels(input)); // Output: holle
+    }
+}
+
+
+QUESTION FROM HACKERRANK :
+Java Exception Handling:
+solution: rt java.util.Scanner;
+class MyCalculator {
+    long power(int n, int p) throws Exception {
+        if (n < 0 || p < 0) {
+            throw new Exception("n or p should not be negative.");
+        }
+        if (n == 0 && p == 0) {
+            throw new Exception("n and p should not be zero.");
+        }
+        return (long) Math.pow(n, p);
+    }
+}
+    
+public class Solution {
+    public static final MyCalculator my_calculator = new MyCalculator();
+    public static final Scanner in = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        while (in .hasNextInt()) {
+            int n = in .nextInt();
+            int p = in .nextInt();
+            
+            try {
+                System.out.println(my_calculator.power(n, p));
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+}
