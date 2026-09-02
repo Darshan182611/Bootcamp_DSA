@@ -1,0 +1,139 @@
+Question 1 : Unique Paths(lc-62)
+solution : class Solution {
+    public int uniquePaths(int m, int n) {
+        int[] dp = new int[n];
+        java.util.Arrays.fill(dp, 1);
+        
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] += dp[j - 1];
+            }
+        }
+        
+        return dp[n - 1];
+    }
+}
+
+question 2 : Maximal Square(lc-221)
+  solution: class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if (matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+            return 0;
+        }
+
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] dp = new int[m][n];
+        int maxSide = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (matrix[i][j] == '1') {
+                    if (i == 0 || j == 0) {
+                        dp[i][j] = 1;
+                    } else {
+                        dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+                    }
+                    maxSide = Math.max(maxSide, dp[i][j]);
+                }
+            }
+        }
+
+        return maxSide * maxSide;
+    }
+}
+
+question 3 : All Paths From Source to Target(lc-797)
+  solution : import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        path.add(0);
+        dfs(graph, 0, path, result);
+        return result;
+    }
+
+    private void dfs(int[][] graph, int curr, List<Integer> path, List<List<Integer>> result) {
+        if (curr == graph.length - 1) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+
+        for (int next : graph[curr]) {
+            path.add(next);
+            dfs(graph, next, path, result);
+            path.remove(path.size() - 1);
+        }
+    }
+}
+
+HomeWork Questions: 
+Questions 4 : Maximum Sum Circular Subarray(lc-918)
+  solutions : class Solution {
+    public int maxSubarraySumCircular(int[] nums) {
+        int totalSum = 0;
+        int currMax = 0;
+        int maxSum = nums[0];
+        int currMin = 0;
+        int minSum = nums[0];
+        
+        for (int num : nums) {
+            currMax = Math.max(num, currMax + num);
+            maxSum = Math.max(maxSum, currMax);
+            
+            currMin = Math.min(num, currMin + num);
+            minSum = Math.min(minSum, currMin);
+            
+            totalSum += num;
+        }
+        
+        if (maxSum < 0) {
+            return maxSum;
+        }
+        
+        return Math.max(maxSum, totalSum - minSum);
+    }
+}
+questions 5 : Maximum Frequency Stack(lc-895)
+  solution : import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+class FreqStack {
+    private Map<Integer, Integer> freqMap;
+    private Map<Integer, Stack<Integer>> groupMap;
+    private int maxFreq;
+
+    public FreqStack() {
+        freqMap = new HashMap<>();
+        groupMap = new HashMap<>();
+        maxFreq = 0;
+    }
+    
+    public void push(int val) {
+        int freq = freqMap.getOrDefault(val, 0) + 1;
+        freqMap.put(val, freq);
+        
+        if (freq > maxFreq) {
+            maxFreq = freq;
+        }
+        
+        groupMap.computeIfAbsent(freq, k -> new Stack<>()).push(val);
+    }
+    
+    public int pop() {
+        Stack<Integer> stack = groupMap.get(maxFreq);
+        int val = stack.pop();
+        
+        freqMap.put(val, freqMap.get(val) - 1);
+        
+        if (stack.isEmpty()) {
+            maxFreq--;
+        }
+        
+        return val;
+    }
+}
