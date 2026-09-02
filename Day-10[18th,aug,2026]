@@ -1,0 +1,77 @@
+Question 1: Validate Binary Search Tree(lc-98)
+solution : /**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+
+    public boolean isValidBST(TreeNode root) {
+        return checkBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    public boolean checkBST(TreeNode root, long min, long max) {
+
+        if (root == null) {
+            return true;
+        }
+
+        // Current node must be within the valid range
+        if (root.val <= min || root.val >= max) {
+            return false;
+        }
+
+        // Left: values must be smaller than root
+        boolean left = checkBST(root.left, min, root.val);
+
+        // Right: values must be greater than root
+        boolean right = checkBST(root.right, root.val, max);
+
+        return left && right;
+    }
+}
+
+question 2: Remove Linked List Elements(lc-203)
+solution: class Solution {
+    public ListNode removeElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode current = dummy;
+        
+        while (current.next != null) {
+            if (current.next.val == val) {
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
+        }
+        
+        return dummy.next;
+    }
+}
+
+HomeWork Question : 
+Question:  Lowest Common Ancestor of a Binary Search Tree(235)
+solution: class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        while (root != null) {
+            if (p.val < root.val && q.val < root.val) {
+                root = root.left;
+            } else if (p.val > root.val && q.val > root.val) {
+                root = root.right;
+            } else {
+                return root;
+            }
+        }
+        return null;
+    }
+}
