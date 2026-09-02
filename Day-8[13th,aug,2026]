@@ -1,1 +1,181 @@
+question 1:Reverse String(lc-344)
+solution: class Solution {
+  public void reverseString(char[] s) {
+    int l = 0;
+    int r = s.length - 1;
+
+    while (l < r) {
+      char temp = s[l];
+      s[l++] = s[r];
+      s[r--] = temp;
+    }
+  }
+}
+
+question 2: Shuffle String(lc-1528)
+solution: class Solution {
+    public String restoreString(String s, int[] indices) {
+        char[] res = new char[s.length()];
+        for (int i = 0; i < s.length(); i++) {
+            res[indices[i]] = s.charAt(i);
+        }
+        return new String(res);
+    }
+}
+
+question 3: Backspace String Compare(lc-844)
+solution: class Solution {
+    public boolean backspaceCompare(String s, String t) {
+        int i = s.length() - 1, j = t.length() - 1;
+        int skipS = 0, skipT = 0;
+        
+        while (i >= 0 || j >= 0) {
+            while (i >= 0) {
+                if (s.charAt(i) == '#') {
+                    skipS++;
+                    i--;
+                } else if (skipS > 0) {
+                    skipS--;
+                    i--;
+                } else {
+                    break;
+                }
+            }
+            
+            while (j >= 0) {
+                if (t.charAt(j) == '#') {
+                    skipT++;
+                    j--;
+                } else if (skipT > 0) {
+                    skipT--;
+                    j--;
+                } else {
+                    break;
+                }
+            }
+            
+            if (i >= 0 && j >= 0 && s.charAt(i) != t.charAt(j)) {
+                return false;
+            }
+            
+            if ((i >= 0) != (j >= 0)) {
+                return false;
+            }
+            
+            i--;
+            j--;
+        }
+        
+        return true;
+    }
+}
+
+question 4:  Add Two Numbers(lc-2)
+solution: /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+  public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(0);
+    ListNode curr = dummy;
+    int carry = 0;
+
+    while (l1 != null || l2 != null || carry > 0) {
+      if (l1 != null) {
+        carry += l1.val;
+        l1 = l1.next;
+      }
+      if (l2 != null) {
+        carry += l2.val;
+        l2 = l2.next;
+      }
+      curr.next = new ListNode(carry % 10);
+      carry /= 10;
+      curr = curr.next;
+    }
+
+    return dummy.next;
+  }
+}
+
+HomeWork Questionn: 
+Question 5: Remove Nth Node From End of List(lc-19)
+solution: class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode first = dummy;
+        ListNode second = dummy;
+        
+        // Advance first so that there is a gap of n nodes between first and second
+        for (int i = 0; i <= n; i++) {
+            first = first.next;
+        }
+        
+        // Move first to the end, maintaining the gap
+        while (first != null) {
+            first = first.next;
+            second = second.next;
+        }
+        
+        // Skip the desired node
+        second.next = second.next.next;
+        
+        return dummy.next;
+    }
+}
+
+question 6 : Reorder List(lc-143)
+solution: /**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public void reorderList(ListNode head) {
+        if (head == null || head.next == null) return;
+        
+        // Step 1: Find the middle of the linked list
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        // Step 2: Reverse the second half of the list
+        ListNode prev = null, curr = slow.next;
+        slow.next = null; // Split the two halves
+        while (curr != null) {
+            ListNode nextTemp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextTemp;
+        }
+        
+        // Step 3: Merge the two halves alternately
+        ListNode first = head, second = prev;
+        while (second != null) {
+            ListNode temp1 = first.next;
+            ListNode temp2 = second.next;
+            
+            first.next = second;
+            second.next = temp1;
+            
+            first = temp1;
+            second = temp2;
+        }
+    }
+}
+
 
