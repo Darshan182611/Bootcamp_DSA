@@ -1,0 +1,176 @@
+question 1 : Jump Game(lc-55)
+soltion: class Solution {
+    public boolean canJump(int[] nums) {
+        int maxReach = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (i > maxReach) {
+                return false;
+            }
+            maxReach = Math.max(maxReach, i + nums[i]);
+        }
+        return true;
+    }
+}
+
+question 2: Product of Array Except Self(lc-238)
+soltion: class Solution {
+  public int[] productExceptSelf(int[] nums) {
+    int n = nums.length;
+    int[] ans = new int[n];    
+    int[] prefix = new int[n]; 
+    int[] suffix = new int[n]; 
+
+    prefix[0] = 1;
+    for (int i = 1; i < n; ++i)
+      prefix[i] = prefix[i - 1] * nums[i - 1];
+
+    suffix[n - 1] = 1;
+    for (int i = n - 2; i >= 0; --i)
+      suffix[i] = suffix[i + 1] * nums[i + 1];
+
+    for (int i = 0; i < n; ++i)
+      ans[i] = prefix[i] * suffix[i];
+
+    return ans;
+  }
+}
+
+question 3: Rotate Array(lc-189)
+soltion: class Solution {
+    public void rotate(int[] nums, int k) {
+        int n = nums.length;
+        k = k % n;
+
+        reverse(nums, 0, n - 1);
+
+        reverse(nums, 0, k - 1);
+
+        reverse(nums, k, n - 1);
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+}
+
+question 4:Merge Intervals(lc-56)
+solution: import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public int[][] merge(int[][] intervals) {
+
+        if (intervals.length <= 1) {
+            return intervals;
+        }
+
+        Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
+
+        List<int[]> merged = new ArrayList<>();
+
+        int[] currentInterval = intervals[0];
+        merged.add(currentInterval);
+
+        for (int[] interval : intervals) {
+            int currentEnd = currentInterval[1];
+            int nextStart = interval[0];
+            int nextEnd = interval[1];
+
+            if (currentEnd >= nextStart) {
+                currentInterval[1] = Math.max(currentEnd, nextEnd);
+            } else {
+
+                currentInterval = interval;
+                merged.add(currentInterval);
+            }
+        }
+
+        return merged.toArray(new int[merged.size()][]);
+    }
+}
+
+HomeWork question :
+question 5: Gas Station(lc-134)
+solution: class Solution {
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        int currentGas = 0;
+        int startStation = 0;
+
+        for (int i = 0; i < gas.length; i++) {
+            totalGas += gas[i];
+            totalCost += cost[i];
+
+            currentGas += gas[i] - cost[i];
+
+            if (currentGas < 0) {
+                startStation = i + 1;
+                currentGas = 0;
+            }
+        }
+
+        if (totalGas < totalCost) {
+            return -1;
+        }
+
+        return startStation;
+    }
+}
+
+question 6: Spiral Matrix(lc-54)
+solution: import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+
+        if (matrix == null || matrix.length == 0) {
+            return result;
+        }
+
+        int top = 0;
+        int bottom = matrix.length - 1;
+        int left = 0;
+        int right = matrix[0].length - 1;
+
+        while (top <= bottom && left <= right) {
+
+            for (int j = left; j <= right; j++) {
+                result.add(matrix[top][j]);
+            }
+            top++;
+
+            for (int i = top; i <= bottom; i++) {
+                result.add(matrix[i][right]);
+            }
+            right--;
+
+            if (top <= bottom) {
+
+                for (int j = right; j >= left; j--) {
+                    result.add(matrix[bottom][j]);
+                }
+                bottom--;
+            }
+
+            if (left <= right) {
+
+                for (int i = bottom; i >= top; i--) {
+                    result.add(matrix[i][left]);
+                }
+                left++;
+            }
+        }
+
+        return result;
+    }
+}
