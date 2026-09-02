@@ -1,0 +1,91 @@
+question 1: Move Zeroes(lc-283)
+solution: class Solution {
+    public void moveZeroes(int[] nums) {
+        int n = nums.length;
+        // Step 1: Create a temporary array of the same size
+        int[] temp = new int[n]; 
+        int tempIndex = 0;
+
+        // Step 2 & 3: Copy all non-zero elements to the temporary array
+        for (int i = 0; i < n; i++) {
+            if (nums[i] != 0) {
+                temp[tempIndex] = nums[i];
+                tempIndex++;
+            }
+        }
+
+        // Note: Remaining indices in temp are already 0 by default in Java
+
+        // Step 5: Copy everything back from temp to the original nums array
+        for (int i = 0; i < n; i++) {
+            nums[i] = temp[i];
+        }
+    }
+}
+
+question 2: Reverse Words in a String(lc-151)
+solution: class Solution {
+    public String reverseWords(String s) {
+        String[] words = s.trim().split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (int i = words.length - 1; i >= 0; i--) {
+            sb.append(words[i]);
+            if (i > 0) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+}
+
+question 3 : Is Subsequence(lc-392)
+solution: class Solution {
+    public boolean isSubsequence(String s, String t) {
+       int i = 0;
+        int j = 0;
+
+        while (i < s.length() && j < t.length()) {
+            if (s.charAt(i) == t.charAt(j)) {
+                i++;
+            }
+            j++;
+        }
+        return i == s.length();  
+    }
+}
+
+HomeWork Question: 
+question 4 : Find the Highest Altitude(lc-1732)
+solution: class Solution {
+    public int largestAltitude(int[] gain) {
+        int currentAltitude = 0;
+        int maxAltitude = 0;
+        for (int g : gain) {
+            currentAltitude += g;
+            maxAltitude = Math.max(maxAltitude, currentAltitude);
+        }
+        return maxAltitude;
+    }
+}
+
+question 5: Find Pivot Index(lc-724)
+solution:class Solution {
+    public int pivotIndex(int[] nums) {
+        int totalSum = 0;
+        for (int num : nums) {
+            totalSum += num;
+        }
+        
+        int leftSum = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (leftSum == totalSum - leftSum - nums[i]) {
+                return i;
+            }
+            leftSum += nums[i];
+        }
+        
+        return -1;
+    }
+}
+
+
