@@ -1,0 +1,298 @@
+question 1 : Keys and Rooms(lc-841)
+solution : class Solution {
+
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+
+        boolean[] visited = new boolean[rooms.size()];
+
+        dfs(rooms, 0, visited);
+
+        // Check whether every room was visited
+        for (boolean room : visited) {
+            if (!room) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void dfs(List<List<Integer>> rooms,
+                     int room,
+                     boolean[] visited) {
+
+        // Mark current room as visited
+        visited[room] = true;
+
+        // Visit all rooms whose keys are present
+        for (int key : rooms.get(room)) {
+
+            if (!visited[key]) {
+                dfs(rooms, key, visited);
+            }
+        }
+    }
+}
+
+question 2:  Max Area of Island(lc-695)
+solutin : class Solution {
+    
+    // This is the main "Radar Sweep" function
+    public int maxAreaOfIsland(int[][] grid) {
+        int maxArea = 0;
+        int rows = grid.length;
+        int cols = grid[0].length;
+        
+        // Scan every single cell in the grid
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                // When we find a piece of unvisited land...
+                if (grid[r][c] == 1) {
+                    // ...calculate its area using our DFS helper
+                    int currentArea = calculateArea(grid, r, c);
+                    
+                    // Update the record if this island is the biggest so far
+                    maxArea = Math.max(maxArea, currentArea);
+                }
+            }
+        }
+        
+        return maxArea;
+    }
+    
+    // This is the DFS helper function that measures a single island
+    private int calculateArea(int[][] grid, int row, int col) {
+        // 1 & 2. Check Boundaries and Water/Visited cells
+        if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length || grid[row][col] == 0) {
+            return 0;
+        }
+        
+        // 3. "Sink" the land to mark it as visited so we don't count it again
+        grid[row][col] = 0;
+        
+        // 4 & 5. Spread in all 4 directions, calculate their areas, and add 1 for the current cell
+        return 1 
+             + calculateArea(grid, row - 1, col) // Up
+             + calculateArea(grid, row + 1, col) // Down
+             + calculateArea(grid, row, col - 1) // Left
+             + calculateArea(grid, row, col + 1); // Right
+    }
+}
+
+
+Question 3 : Flood Fill(lc-733)
+solution: class Solution {
+
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+
+        int originalColor = image[sr][sc];
+
+        // If already the required color
+        if (originalColor == color) {
+            return image;
+        }
+
+        dfs(image, sr, sc, originalColor, color);
+
+        return image;
+    }
+
+    private void dfs(int[][] image, int r, int c,
+                     int originalColor, int color) {
+
+        // Boundary + color check
+        if (r < 0 || r >= image.length ||
+            c < 0 || c >= image[0].length ||
+            image[r][c] != originalColor) {
+            return;
+        }
+
+        // Change current pixel
+        image[r][c] = color;
+
+        // Up
+        dfs(image, r - 1, c, originalColor, color);
+
+        // Down
+        dfs(image, r + 1, c, originalColor, color);
+
+        // Left
+        dfs(image, r, c - 1, originalColor, color);
+
+        // Right
+        dfs(image, r, c + 1, originalColor, color);
+    }
+}
+question 4 Rotting Oranges(lc-994)
+solution : import java.util.LinkedList;
+import java.util.Queue;
+
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        if (grid == null || grid.length == 0) return 0;
+        
+        int rows = grid.length;
+        int cols = grid[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+        int freshCount = 0;
+        
+        // Step 1: Initialize the queue with all initially rotten oranges 
+        // and count the total number of fresh oranges.
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (grid[r][c] == 2) {
+                    queue.offer(new int[]{r, c});
+                } else if (grid[r][c] == 1) {
+                    freshCount++;
+                }
+            }
+        }
+        
+        // If there are no fresh oranges from the start, 0 minutes are needed.
+        if (freshCount == 0) return 0;
+        
+        int minutes = 0;
+        // Direction vectors for moving up, down, left, and right
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        
+        // Step 2: Multi-source BFS traversal
+        while (!queue.isEmpty() && freshCount > 0) {
+            int size = queue.size();
+            
+            // Process all rotten oranges at the current time level
+            for (int i = 0; i < size; i++) {
+                int[] curr = queue.poll();
+                int r = curr[0];
+                int c = curr[1];
+                
+                // Check all 4-directional neighbors
+                for (int[] dir : directions) {
+                    int nextR = r + dir[0];
+                    int nextC = c + dir[1];
+                    
+                    // If the neighbor is within bounds and is a fresh orange
+                    if (nextR >= 0 && nextR < rows && nextC >= 0 && nextC < cols && grid[nextR][nextC] == 1) {
+                        grid[nextR][nextC] = 2; // Infect the fresh orange
+                        queue.offer(new int[]{nextR, nextC}); // Add newly rotten orange to queue
+                        freshCount--; // Decrement fresh orange count
+                    }
+                }
+            }
+            minutes++; // Increment time after processing the current layer
+        }
+        
+        // Step 3: If fresh oranges still remain, return -1; otherwise, return elapsed minutes.
+        return freshCount == 0 ? minutes : -1;
+    }
+}
+
+HomeWork Questions : 
+question 5: Find Eventual Safe States(lc-802)
+solution : import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+class Solution {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
+        int n = graph.length;
+        int[] state = new int[n]; // 0: unvisited, 1: visiting (in current recursion stack), 2: safe
+        List<Integer> safeNodes = new ArrayList<>();
+        
+        for (int i = 0; i < n; i++) {
+            if (dfs(i, graph, state)) {
+                safeNodes.add(i);
+            }
+        }
+        
+        return safeNodes;
+    }
+    
+    private boolean dfs(int node, int[][] graph, int[] state) {
+        if (state[node] > 0) {
+            return state[node] == 2;
+        }
+        
+        state[node] = 1; // Mark as visiting
+        
+        for (int neighbor : graph[node]) {
+            if (state[neighbor] == 2) {
+                continue;
+            }
+            if (state[neighbor] == 1 || !dfs(neighbor, graph, state)) {
+                return false;
+            }
+        }
+        
+        state[node] = 2; // Mark as safe
+        return true;
+    }
+}
+
+question 6 : Number of Provinces(lc-547)
+solution :  class Solution {
+    public int findCircleNum(int[][] isConnected) {
+        int n = isConnected.length;
+        boolean[] visited = new boolean[n];
+        int provinces = 0;
+        
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                dfs(isConnected, visited, i);
+                provinces++;
+            }
+        }
+        
+        return provinces;
+    }
+    
+    private void dfs(int[][] isConnected, boolean[] visited, int i) {
+        visited[i] = true;
+        for (int j = 0; j < isConnected.length; j++) {
+            if (isConnected[i][j] == 1 && !visited[j]) {
+                dfs(isConnected, visited, j);
+            }
+        }
+    }
+}
+
+
+question 7:  Find if Path Exists in Graph(1971)
+solution: import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public boolean validPath(int n, int[][] edges, int source, int destination) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            adj.add(new ArrayList<>());
+        }
+        
+        for (int[] edge : edges) {
+            adj.get(edge[0]).add(edge[1]);
+            adj.get(edge[1]).add(edge[0]);
+        }
+        
+        boolean[] visited = new boolean[n];
+        return dfs(source, destination, adj, visited);
+    }
+    
+    private boolean dfs(int curr, int destination, List<List<Integer>> adj, boolean[] visited) {
+        if (curr == destination) {
+            return true;
+        }
+        
+        visited[curr] = true;
+        
+        for (int neighbor : adj.get(curr)) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, destination, adj, visited)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+}
+
+
