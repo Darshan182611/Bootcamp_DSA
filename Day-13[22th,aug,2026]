@@ -1,0 +1,237 @@
+question 1: Two Sum(lc-1)
+Solution: import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        return new int[0];
+    }
+}
+
+question 2: Minimum Size Subarray Sum(lc-209)
+Solution: class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left = 0;
+        int sum = 0;
+        int minLen = Integer.MAX_VALUE;
+        
+        for (int right = 0; right < nums.length; right++) {
+            sum += nums[right];
+            
+            while (sum >= target) {
+                minLen = Math.min(minLen, right - left + 1);
+                sum -= nums[left];
+                left++;
+            }
+        }
+        
+        return minLen == Integer.MAX_VALUE ? 0 : minLen;
+    }
+}
+
+question 3: Shortest Unsorted Continuous Subarray(lc-581)
+Solution : class Solution {
+    public int findUnsortedSubarray(int[] nums) {
+        int n = nums.length;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        boolean flag = false;
+
+        // Find the minimum element that is out of order
+        for (int i = 1; i < n; i++) {
+            if (nums[i] < nums[i - 1]) {
+                flag = true;
+            }
+            if (flag) {
+                min = Math.min(min, nums[i]);
+            }
+        }
+
+        flag = false;
+        // Find the maximum element that is out of order
+        for (int i = n - 2; i >= 0; i--) {
+            if (nums[i] > nums[i + 1]) {
+                flag = true;
+            }
+            if (flag) {
+                max = Math.max(max, nums[i]);
+            }
+        }
+
+        // If the array is already sorted
+        if (min == Integer.MAX_VALUE) {
+            return 0;
+        }
+
+        // Find the left boundary
+        int l = 0;
+        for (; l < n; l++) {
+            if (nums[l] > min) {
+                break;
+            }
+        }
+
+        // Find the right boundary
+        int r = n - 1;
+        for (; r >= 0; r--) {
+            if (nums[r] < max) {
+                break;
+            }
+        }
+
+        return r - l + 1;
+    }
+}
+
+
+question 4: Two Sum II - Input Array Is Sorted(lc-167)
+solution: class Solution {
+    public int[] twoSum(int[] numbers, int target) {
+        int left = 0;
+        int right = numbers.length - 1;
+        
+        while (left < right) {
+            int sum = numbers[left] + numbers[right];
+            
+            if (sum == target) {
+                return new int[] { left + 1, right + 1 };
+            } else if (sum < target) {
+                left++;
+            } else {
+                right--;
+            }
+        }
+        
+        return new int[0];
+    }
+}
+
+HomeWork Question 
+question 5: Max Consecutive Ones III(lc-1004)
+solution: class Solution {
+    public int longestOnes(int[] nums, int k) {
+        int left = 0;
+        int zerosCount = 0;
+        int maxLength = 0;
+        
+        for (int right = 0; right < nums.length; right++) {
+            if (nums[right] == 0) {
+                zerosCount++;
+            }
+            
+            while (zerosCount > k) {
+                if (nums[left] == 0) {
+                    zerosCount--;
+                }
+                left++;
+            }
+            
+            maxLength = Math.max(maxLength, right - left + 1);
+        }
+        
+        return maxLength;
+    }
+}
+
+question 6 : Interval List Intersections(lc-986)
+Solution: import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
+        List<int[]> result = new ArrayList<>();
+        int i = 0, j = 0;
+        
+        while (i < firstList.length && j < secondList.length) {
+            int start = Math.max(firstList[i][0], secondList[j][0]);
+            int end = Math.min(firstList[i][1], secondList[j][1]);
+            
+            if (start <= end) {
+                result.add(new int[]{start, end});
+            }
+            
+            if (firstList[i][1] < secondList[j][1]) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+        
+        return result.toArray(new int[result.size()][]);
+    }
+}
+
+
+question 7 : Sliding Window Median(lc-480)
+solution: import java.util.Comparator;
+import java.util.TreeSet;
+
+class Solution {
+    public double[] medianSlidingWindow(int[] nums, int k) {
+        Comparator<Integer> comparator = (a, b) -> {
+            if (nums[a] != nums[b]) {
+                return Integer.compare(nums[a], nums[b]);
+            }
+            return a - b;
+        };
+
+        TreeSet<Integer> left = new TreeSet<>(comparator.reversed());
+        TreeSet<Integer> right = new TreeSet<>(comparator);
+
+        double[] result = new double[nums.length - k + 1];
+
+        for (int i = 0; i < k; i++) {
+            left.add(i);
+        }
+        balance(left, right);
+
+        for (int i = k; ; i++) {
+            result[i - k] = getMedian(left, right, nums, k);
+            if (i == nums.length) {
+                break;
+            }
+
+            int outIdx = i - k;
+            int inIdx = i;
+
+            if (!left.remove(outIdx)) {
+                right.remove(outIdx);
+            }
+
+            if (left.isEmpty() || nums[inIdx] <= nums[left.first()]) {
+                left.add(inIdx);
+            } else {
+                right.add(inIdx);
+            }
+            balance(left, right);
+        }
+
+        return result;
+    }
+
+    private void balance(TreeSet<Integer> left, TreeSet<Integer> right) {
+        while (left.size() > right.size() + 1) {
+            right.add(left.pollFirst());
+        }
+        while (right.size() > left.size()) {
+            left.add(right.pollFirst());
+        }
+    }
+
+    private double getMedian(TreeSet<Integer> left, TreeSet<Integer> right, int[] nums, int k) {
+        if (k % 2 == 1) {
+            return nums[left.first()];
+        } else {
+            return ((double) nums[left.first()] + nums[right.first()]) / 2.0;
+        }
+    }
+}
+
