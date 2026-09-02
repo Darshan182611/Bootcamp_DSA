@@ -1,0 +1,182 @@
+question 1: Rotate Image(lc-48)
+solution: class Solution {
+  public void rotate(int[][] matrix) {
+    for (int i = 0, j = matrix.length - 1; i < j; ++i, --j) {
+      int[] temp = matrix[i];
+      matrix[i] = matrix[j];
+      matrix[j] = temp;
+    }
+
+    for (int i = 0; i < matrix.length; ++i)
+      for (int j = i + 1; j < matrix.length; ++j) {
+        final int temp = matrix[i][j];
+        matrix[i][j] = matrix[j][i];
+        matrix[j][i] = temp;
+      }
+  }
+}
+
+question 2: Set Matrix Zeroes(lc-73)
+Solution: class Solution {
+    public void setZeroes(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        boolean firstRowHasZero = false;
+        boolean firstColHasZero = false;
+        
+        // Check if the first row contains any zeros
+        for (int j = 0; j < n; j++) {
+            if (matrix[0][j] == 0) {
+                firstRowHasZero = true;
+                break;
+            }
+        }
+        
+        // Check if the first column contains any zeros
+        for (int i = 0; i < m; i++) {
+            if (matrix[i][0] == 0) {
+                firstColHasZero = true;
+                break;
+            }
+        }
+        
+        // Use the first row and column as markers for the rest of the matrix
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+        
+        // Update inner matrix elements based on the markers
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        
+        // Update the first row if needed
+        if (firstRowHasZero) {
+            for (int j = 0; j < n; j++) {
+                matrix[0][j] = 0;
+            }
+        }
+        
+        // Update the first column if needed
+        if (firstColHasZero) {
+            for (int i = 0; i < m; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+}
+
+HomeWork Question :
+question 3: Convert 1D Array Into 2D Array(lc-2022)
+solution: class Solution {
+    public int[][] construct2DArray(int[] original, int m, int n) {
+        if (original.length != m * n) {
+            return new int[0][0];
+        }
+        
+        int[][] result = new int[m][n];
+        for (int i = 0; i < original.length; i++) {
+            result[i / n][i % n] = original[i];
+        }
+        
+        return result;
+    }
+}
+
+question 4: Shift 2D Grid(lc-1260)
+solution: import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> shiftGrid(int[][] grid, int k) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int total = m * n;
+        k %= total;
+
+        List<List<Integer>> ans = new ArrayList<>();
+        for (int i = 0; i < m; i++) {
+            List<Integer> row = new ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                row.add(0);
+            }
+            ans.add(row);
+        }
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int idx = (i * n + j + k) % total;
+                int x = idx / n;
+                int y = idx % n;
+                ans.get(x).set(y, grid[i][j]);
+            }
+        }
+
+        return ans;
+    }
+}
+
+question 5: Game of Life(lc-289)
+solution: class Solution {
+    public void gameOfLife(int[][] board) {
+        int m = board.length;
+        int n = board[0].length;
+        
+        int[] dr = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] dc = {-1, 0, 1, -1, 1, -1, 0, 1};
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int liveNeighbors = 0;
+                
+                for (int k = 0; k < 8; k++) {
+                    int ni = i + dr[k];
+                    int nj = j + dc[k];
+                    
+                    if (ni >= 0 && ni < m && nj >= 0 && nj < n) {
+                        // Check if the neighbor was originally live (1 or 2)
+                        if (board[ni][nj] == 1 || board[ni][nj] == 2) {
+                            liveNeighbors++;
+                        }
+                    }
+                }
+                
+                // Apply rules using state encoding:
+                // 0: dead stays dead
+                // 1: live stays live
+                // 2: live becomes dead (originally 1)
+                // 3: dead becomes live (originally 0)
+                if (board[i][j] == 1) {
+                    if (liveNeighbors < 2 || liveNeighbors > 3) {
+                        board[i][j] = 2;
+                    }
+                } else {
+                    if (liveNeighbors == 3) {
+                        board[i][j] = 3;
+                    }
+                }
+            }
+        }
+        
+        // Final pass to update the board to its next state
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 2) {
+                    board[i][j] = 0;
+                } else if (board[i][j] == 3) {
+                    board[i][j] = 1;
+                }
+            }
+        }
+    }
+}
+
