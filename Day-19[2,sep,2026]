@@ -1,0 +1,296 @@
+TEST: 
+
+// ==========================================
+// Q1. Product of Array Except Self
+// Given an integer array nums, return an array answer such that answer[i] is equal to the product of all elements of nums except nums[i].
+// You must solve it in O(n) time and without using division.
+// Example: Input: [1,2,3,4] -> Output: [24,12,8,6]
+// ==========================================
+class SolutionQ1 {
+    public int[] productExceptSelf(int[] nums) {
+        int n = nums.length;
+        int[] ans = new int[n];
+        ans[0] = 1;
+        for (int i = 1; i < n; i++) {
+            ans[i] = ans[i - 1] * nums[i - 1];
+        }
+        int right = 1;
+        for (int i = n - 1; i >= 0; i--) {
+            ans[i] *= right;
+            right *= nums[i];
+        }
+        return ans;
+    }
+}
+
+// ==========================================
+// Q2. Longest Consecutive Sequence
+// Given an unsorted integer array nums, return the length of the longest consecutive elements sequence.
+// Your solution must run in O(n) time.
+// Example: Input: [100,4,200,1,3,2] -> Output: 4
+// ==========================================
+import java.util.HashSet;
+import java.util.Set;
+
+class SolutionQ2 {
+    public int longestConsecutive(int[] nums) {
+        Set<Integer> set = new HashSet<>();
+        for (int num : nums) {
+            set.add(num);
+        }
+        int longest = 0;
+        for (int num : set) {
+            if (!set.contains(num - 1)) {
+                int currNum = num;
+                int currLen = 1;
+                while (set.contains(currNum + 1)) {
+                    currNum++;
+                    currLen++;
+                }
+                longest = Math.max(longest, currLen);
+            }
+        }
+        return longest;
+    }
+}
+
+// ==========================================
+// Q3. 3Sum
+// Given an integer array nums, return all unique triplets [nums[i], nums[j], nums[k]] such that i, j, and k are distinct and nums[i]+nums[j]+nums[k]==0.
+// The solution must not contain duplicate triplets.
+// Example: Input: [-1,0,1,2,-1,-4] -> Output: [[-1,-1,2], [-1,0,1]]
+// ==========================================
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+class SolutionQ3 {
+    public List<List<Integer>> threeSum(int[] nums) {
+        Arrays.sort(nums);
+        List<List<Integer>> res = new ArrayList<>();
+        for (int i = 0; i < nums.length - 2; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+            int l = i + 1, r = nums.length - 1;
+            while (l < r) {
+                int sum = nums[i] + nums[l] + nums[r];
+                if (sum == 0) {
+                    res.add(Arrays.asList(nums[i], nums[l], nums[r]));
+                    while (l < r && nums[l] == nums[l + 1]) l++;
+                    while (l < r && nums[r] == nums[r - 1]) r--;
+                    l++;
+                    r--;
+                } else if (sum < 0) {
+                    l++;
+                } else {
+                    r--;
+                }
+            }
+        }
+        return res;
+    }
+}
+
+// ==========================================
+// Q4. Daily Temperatures
+// Given an array temperatures, return an array where answer[i] tells you how many days you have to wait after the i-th day to get a warmer temperature.
+// If no future day exists, return 0.
+// Example: Input: [73,74,75,71,69,72,76,73] -> Output: [1,1,4,2,1,1,0,0]
+// ==========================================
+import java.util.Stack;
+
+class SolutionQ4 {
+    public int[] dailyTemperatures(int[] temperatures) {
+        int[] ans = new int[temperatures.length];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < temperatures.length; i++) {
+            while (!stack.isEmpty() && temperatures[i] > temperatures[stack.peek()]) {
+                int idx = stack.pop();
+                ans[idx] = i - idx;
+            }
+            stack.push(i);
+        }
+        return ans;
+    }
+}
+
+// ==========================================
+// Q5. Kth Largest Element in an Array
+// Given an integer array nums and an integer k, return the k-th largest element in the array.
+// Example: Input: nums = [3,2,1,5,6,4], k = 2 -> Output: 5
+// ==========================================
+import java.util.PriorityQueue;
+
+class SolutionQ5 {
+    public int findKthLargest(int[] nums, int k) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int num : nums) {
+            pq.offer(num);
+            if (pq.size() > k) {
+                pq.poll();
+            }
+        }
+        return pq.peek();
+    }
+}
+
+// ==========================================
+// Q6. Merge K Sorted Linked Lists
+// You are given an array of k linked lists, where each linked list is sorted in ascending order. Merge all the linked lists into one sorted linked list.
+// Example: Input: [[1,4,5], [1,3,4],[2,6]] -> Output: [1,1,2,3,4,4,5,6]
+// ==========================================
+import java.util.PriorityQueue;
+
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}
+
+class SolutionQ6 {
+    public ListNode mergeKLists(ListNode[] lists) {
+        if (lists == null || lists.length == 0) return null;
+        PriorityQueue<ListNode> pq = new PriorityQueue<>((a, b) -> a.val - b.val);
+        for (ListNode node : lists) {
+            if (node != null) {
+                pq.offer(node);
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        while (!pq.isEmpty()) {
+            ListNode node = pq.poll();
+            curr.next = node;
+            curr = curr.next;
+            if (node.next != null) {
+                pq.offer(node.next);
+            }
+        }
+        return dummy.next;
+    }
+}
+
+// ==========================================
+// Q7. Course Schedule II
+// There are numCourses courses labeled from 0 to numCourses - 1. prerequisites[i] = [a,b] means you must complete course b before taking course a.
+// Return an ordering of courses you should take to finish all courses. If it is impossible, return an empty array.
+// Example: Input: numCourses = 4, prerequisites = [[1,0], [2,0],[3,1],[3,2]] -> Output: [0,2,1,3]
+// ==========================================
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.LinkedList;
+
+class SolutionQ7 {
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) adj.add(new ArrayList<>());
+        int[] indegree = new int[numCourses];
+        for (int[] p : prerequisites) {
+            adj.get(p[1]).add(p[0]);
+            indegree[p[0]]++;
+        }
+        Queue<Integer> q = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) q.offer(i);
+        }
+        int[] order = new int[numCourses];
+        int idx = 0;
+        while (!q.isEmpty()) {
+            int curr = q.poll();
+            order[idx++] = curr;
+            for (int neighbor : adj.get(curr)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.offer(neighbor);
+                }
+            }
+        }
+        return idx == numCourses ? order : new int[0];
+    }
+}
+
+// ==========================================
+// Q8. Lowest Common Ancestor of a Binary Tree
+// Given the root of a binary tree and two nodes p and q, find their lowest common ancestor.
+// Example: Input Tree with p=5, q=1 -> Output: 3
+// ==========================================
+class TreeNodeTree {
+    int val;
+    TreeNodeTree left;
+    TreeNodeTree right;
+    TreeNodeTree(int x) { val = x; }
+}
+
+class SolutionQ8 {
+    public TreeNodeTree lowestCommonAncestor(TreeNodeTree root, TreeNodeTree p, TreeNodeTree q) {
+        if (root == null || root == p || root == q) return root;
+        TreeNodeTree left = lowestCommonAncestor(root.left, p, q);
+        TreeNodeTree right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null) return root;
+        return left != null ? left : right;
+    }
+}
+
+// ==========================================
+// Q9. Word Search
+// Given an m x n grid of characters and a string word, return true if the word exists in the grid.
+// The word can be constructed from sequentially adjacent cells horizontally or vertically. A cell cannot be used more than once.
+// Example: Input: board = [['A','B','C','E'],['S','F','C','S'],['A','D','E','E']], word = "ABCCED" -> Output: true
+// ==========================================
+class SolutionQ9 {
+    public boolean exist(char[][] board, String word) {
+        int rows = board.length;
+        int cols = board[0].length;
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (dfs(board, word, r, c, 0)) return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean dfs(char[][] board, String word, int r, int c, int index) {
+        if (index == word.length()) return true;
+        if (r < 0 || c < 0 || r >= board.length || c >= board[0].length || board[r][c] != word.charAt(index)) {
+            return false;
+        }
+        
+        char temp = board[r][c];
+        board[r][c] = '#'; // Mark as visited
+        
+        boolean found = dfs(board, word, r + 1, c, index + 1) ||
+                        dfs(board, word, r - 1, c, index + 1) ||
+                        dfs(board, word, r, c + 1, index + 1) ||
+                        dfs(board, word, r, c - 1, index + 1);
+                        
+        board[r][c] = temp; // Unmark
+        return found;
+    }
+}
+
+// ==========================================
+// Q10. Longest Increasing Subsequence
+// Given an integer array nums, return the length of the longest strictly increasing subsequence.
+// Example: Input: [10,9,2,5,3,7,101,18] -> Output: 4 (Example subsequence: [2,3,7,101])
+// ==========================================
+import java.util.Arrays;
+
+class SolutionQ10 {
+    public int lengthOfLIS(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int[] dp = new int[nums.length];
+        Arrays.fill(dp, 1);
+        int maxLen = 1;
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxLen = Math.max(maxLen, dp[i]);
+        }
+        return maxLen;
+    }
+}
