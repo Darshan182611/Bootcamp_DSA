@@ -1,0 +1,118 @@
+Question-1 while loop gfg 
+solution : import java.util.Scanner;
+
+class GFG {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int x = sc.nextInt();
+
+        for(int i=x;i>=0;i--){
+        System.out.print(i + " " );
+        } 
+    }
+}
+
+
+
+
+question 2 sum of prime digits 
+solution: class Solution {
+    static int primeSum(int n) {
+        int sum = 0;
+
+        while (n > 0) {
+            int digit = n % 10;
+            // The only prime single-digit numbers are 2, 3, 5, and 7
+            if (digit == 2 || digit == 3 || digit == 5 || digit == 7) {
+                sum += digit;
+            }
+            n /= 10; 
+        }
+
+        return sum;
+        
+    }
+}
+
+
+
+question 3 : Step by Step Condition - Java
+solution : class Geeks {
+    static void isDivisibleByPrime(int n) {
+      if (n % 11 == 0) {
+          System.out.print("Eleven");
+      } else if (n % 3 == 0) {
+          System.out.print("Three");
+      } else if (n % 2 == 0) {
+          System.out.print("Two");
+      } else {
+          System.out.print("-1");
+      }
+        
+        System.out.println();
+    }
+}
+
+
+question 4 : odd or even 
+soltion: class Solution {
+    static boolean isEven(int n) {
+        return n % 2 == 0;
+        
+    }
+}
+
+question 5(leetcode) : String to Integer (atoi)
+solution : class Solution {
+    public int myAtoi(String s) {
+        if (s == null || s.length() == 0)
+            return 0;
+
+        int i = 0;
+        int n = s.length();
+
+        while (i < n && s.charAt(i) == ' ') {
+            i++;
+        }
+
+        if (i == n)
+            return 0;
+
+        int sign = 1;
+        char firstChar = s.charAt(i);
+        if (firstChar == '-') {
+            sign = -1;
+            i++;
+        } else if (firstChar == '+') {
+            i++;
+        }
+
+        long result = 0;
+
+        while (i < n) {
+            char c = s.charAt(i);
+            if (c < '0' || c > '9') {
+                break;
+            }
+
+            result = result * 10 + (c - '0');
+
+            if (sign == 1 && result > Integer.MAX_VALUE) {
+                return Integer.MAX_VALUE;
+            }
+            if (sign == -1 && -result < Integer.MIN_VALUE) {
+                return Integer.MIN_VALUE;
+            }
+
+            i++;
+        }
+
+        return (int) (result * sign);
+    }
+}
+
+
+
+
+
