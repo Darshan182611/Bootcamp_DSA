@@ -1,0 +1,123 @@
+Question 1 Single Number(lc-136)
+solution: class Solution {
+    public int singleNumber(int[] nums) {
+        int result = 0;
+        for (int num : nums) {
+            result ^= num;
+        }
+        return result;
+    }
+}
+
+question 2 : Number of 1 Bits(lc-191)
+  solution : class Solution {
+    public int hammingWeight(int n) {
+        int count = 0;
+        while (n != 0) {
+            n &= (n - 1);
+            count++;
+        }
+        return count;
+    }
+}
+
+question 3  Remove Invalid Parentheses(lc-301)
+  solution: import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+class Solution {
+    public List<String> removeInvalidParentheses(String s) {
+        List<String> result = new ArrayList<>();
+        if (s == null) {
+            return result;
+        }
+
+        Set<String> visited = new HashSet<>();
+        java.util.Queue<String> queue = new java.util.LinkedList<>();
+
+        queue.add(s);
+        visited.add(s);
+        boolean found = false;
+
+        while (!queue.isEmpty()) {
+            String curr = queue.poll();
+
+            if (isValid(curr)) {
+                result.add(curr);
+                found = true;
+            }
+
+            if (found) {
+                continue;
+            }
+
+            for (int i = 0; i < curr.length(); i++) {
+                if (curr.charAt(i) != '(' && curr.charAt(i) != ')') {
+                    continue;
+                }
+
+                String next = curr.substring(0, i) + curr.substring(i + 1);
+                if (!visited.contains(next)) {
+                    visited.add(next);
+                    queue.add(next);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isValid(String s) {
+        int count = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                count++;
+            } else if (c == ')') {
+                count--;
+                if (count < 0) {
+                    return false;
+                }
+            }
+        }
+        return count == 0;
+    }
+}
+
+question 4:Counting Bits(lc-338)
+  solution: class Solution {
+    public int[] countBits(int n) {
+        int[] ans = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            ans[i] = ans[i >> 1] + (i & 1);
+        }
+        return ans;
+    }
+}
+
+
+question 5 : Merge Triplets to Form Target Triplet(lc-1899)
+  solution: class Solution {
+    public boolean mergeTriplets(int[][] triplets, int[] target) {
+        boolean matchX = false;
+        boolean matchY = false;
+        boolean matchZ = false;
+        
+        for (int[] t : triplets) {
+            if (t[0] > target[0] || t[1] > target[1] || t[2] > target[2]) {
+                continue;
+            }
+            
+            if (t[0] == target[0]) matchX = true;
+            if (t[1] == target[1]) matchY = true;
+            if (t[2] == target[2]) matchZ = true;
+            
+            if (matchX && matchY && matchZ) {
+                return true;
+            }
+        }
+        
+        return matchX && matchY && matchZ;
+    }
+}
