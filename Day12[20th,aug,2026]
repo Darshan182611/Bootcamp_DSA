@@ -1,0 +1,137 @@
+question 1: Sort an Array(lc-912)
+solution : class Solution {
+    public int[] sortArray(int[] nums) {
+        int n = nums.length;
+        
+        // Build max heap
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(nums, n, i);
+        }
+        
+        // Extract elements from the heap one by one
+        for (int i = n - 1; i > 0; i--) {
+            // Move current root to the end
+            int temp = nums[0];
+            nums[0] = nums[i];
+            nums[i] = temp;
+            
+            // Call max heapify on the reduced heap
+            heapify(nums, i, 0);
+        }
+        
+        return nums;
+    }
+    
+    private void heapify(int[] nums, int n, int i) {
+        int largest = i;
+        int left = 2 * i + 1;
+        int right = 2 * i + 2;
+        
+        if (left < n && nums[left] > nums[largest]) {
+            largest = left;
+        }
+        
+        if (right < n && nums[right] > nums[largest]) {
+            largest = right;
+        }
+        
+        if (largest != i) {
+            int swap = nums[i];
+            nums[i] = nums[largest];
+            nums[largest] = swap;
+            
+            heapify(nums, n, largest);
+        }
+    }
+}
+
+
+question 2 : Binary Search(lc-704)
+solution: class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        
+        return -1;
+    }
+}
+
+
+HomeWork Question: 
+Question 1: Search in Rotated Sorted Array(lc-33)
+solution:class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            
+            if (nums[mid] == target) {
+                return mid;
+            }
+            
+            // Check if the left half is sorted
+            if (nums[left] <= nums[mid]) {
+                // Check if the target lies within the sorted left half
+                if (nums[left] <= target && target < nums[mid]) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                // Otherwise, the right half must be sorted
+                // Check if the target lies within the sorted right half
+                if (nums[mid] < target && target <= nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+        
+        return -1;
+    }
+}
+
+Question 2 : Subarray Sum Equals K(lc-560)
+solution:  import java.util.HashMap;
+import java.util.Map;
+
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        int count = 0;
+        int prefixSum = 0;
+        Map<Integer, Integer> prefixSumMap = new HashMap<>();
+        
+        // Base case: a prefix sum of 0 occurs once
+        prefixSumMap.put(0, 1);
+        
+        for (int num : nums) {
+            prefixSum += num;
+            
+            // Check if there is a prefix sum that we can subtract to get k
+            if (prefixSumMap.containsKey(prefixSum - k)) {
+                count += prefixSumMap.get(prefixSum - k);
+            }
+            
+            // Add the current prefix sum to the map
+            prefixSumMap.put(prefixSum, prefixSumMap.getOrDefault(prefixSum, 0) + 1);
+        }
+        
+        return count;
+    }
+}
+
